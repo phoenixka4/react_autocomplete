@@ -12,14 +12,20 @@ interface Person {
   name: string;
   born: number;
   died: number;
+  slug: string;
+  sex: string;
+  fatherName: string | null;
+  motherName: string | null;
 }
 
 export const App: React.FC<AppProps> = ({ delay = 300, onSelected }) => {
   const [query, setQuery] = useState('');
   const [appliedQuery, setAppliedQuery] = useState('');
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSetQuery = useCallback(debounce(setAppliedQuery, delay), [
+    setAppliedQuery,
     delay,
   ]);
 
@@ -48,7 +54,7 @@ export const App: React.FC<AppProps> = ({ delay = 300, onSelected }) => {
     }
 
     return peopleFromServer.filter(person =>
-      person.name.toLowerCase().includes(appliedQuery.toLowerCase())
+      person.name.toLowerCase().includes(appliedQuery.toLowerCase()),
     );
   }, [appliedQuery]);
 
@@ -78,7 +84,7 @@ export const App: React.FC<AppProps> = ({ delay = 300, onSelected }) => {
               {filteredPeople.length > 0 ? (
                 filteredPeople.map(person => (
                   <div
-                    key={person.name}
+                    key={person.slug}
                     className="dropdown-item"
                     data-cy="suggestion-item"
                     onClick={() => handlePersonSelect(person)}
